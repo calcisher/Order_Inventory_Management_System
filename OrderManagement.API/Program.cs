@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using OrderManagement.Business.Services;
+using OrderManagement.Core.Interfaces;
 using OrderManagement.DataAccess.Context;
+using OrderManagement.DataAccess.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,8 +17,14 @@ builder.Services.AddDbContext<SystemDbContext>
     (options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));// this line is added to introduce
                                                                                                       // to the api that sql server is being used
                                                                                                       //as the database server
+//Repository and unitofwork records
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+// service records
+builder.Services.AddScoped<IProductService, ProductService>();
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
