@@ -13,6 +13,7 @@ namespace OrderManagement.Core.Entities
         public int UserId { get; set; }
         public virtual User User { get; set; }
         public decimal TotalPrice { get; set; }
+        public List<OrderItem> OrderItems { get; set; }
 
     }
 }
