@@ -26,7 +26,7 @@ namespace OrderManagement.Business.Services
         public async Task CreateProductAsync(Product product)
         {
             await _productRepository.AddAsync(product);
-            await _unitOfWork.CommitAsync(); // Değişiklikleri SQL Server'a gönderir
+            await _unitOfWork.CommitAsync(); //changes are sent to the sql server
         }
 
         public async Task UpdateProductAsync(Product product)
