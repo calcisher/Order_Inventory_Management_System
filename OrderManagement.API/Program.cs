@@ -3,8 +3,17 @@ using OrderManagement.Business.Services;
 using OrderManagement.Core.Interfaces;
 using OrderManagement.DataAccess.Context;
 using OrderManagement.DataAccess.Repositories;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//Logging configuration using Serilog
+Log.Logger= new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.Console()
+    .WriteTo.File("logs/order-management-log-.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+builder.Host.UseSerilog();
 
 // Add services to the container.
 
