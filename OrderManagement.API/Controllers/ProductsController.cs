@@ -32,6 +32,14 @@ namespace OrderManagement.API.Controllers
                 // Ürün oluşunca, onu nereden bulabileceğimizi (GetAll) ve ürünü döner.
                 return CreatedAtAction(nameof(GetAll), new { id = product.Id }, product);
             }
+
+        [HttpPut("{id}/add-stock")]
+        public async Task<IActionResult> AddStock(int id, [FromBody] int quantity)
+        {
+            var result = await _productService.AddStockAsync(id, quantity);
+            if (!result) return BadRequest("Stock not updated");
+            return Ok("Stock successfully updated.");
         }
+    }
     }
 

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OrderManagement.Core.Entities;
 using OrderManagement.Core.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace OrderManagement.Business.Services
 {
@@ -12,6 +13,7 @@ namespace OrderManagement.Business.Services
     {
         private readonly IGenericRepository<Product> _productRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<ProductService> _logger;
 
         public ProductService(IGenericRepository<Product> productRepository, IUnitOfWork unitOfWork)
         {
@@ -43,6 +45,23 @@ namespace OrderManagement.Business.Services
                 _productRepository.Delete(product);
                 await _unitOfWork.CommitAsync();
             }
+        }
+        public async Task<bool> AddStockAsync(int productId, int quantity)
+        {
+            var product= await _unitOfWork.GetRepository<Product>().GetByIdAsync(productId);
+            if (product == null)
+            {
+                _logger.LogWarning($"Failed to add stock. Product with ID {productId} not found");
+                return false;
+            }
+            product.StockQuantity += quantity;
+            _unitOfWork.GetRepository<Product>().Update(product);
+            var result = await _unitOfWork.CommitAsync();
+            if(result>0){
+                _logger.LogInformation($"Stock added to {product.Name}. New stock quantity: {product.StockQuantity}");
+                return true;
+            }
+            return false;
         }
     }
 }

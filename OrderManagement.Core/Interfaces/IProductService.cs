@@ -14,5 +14,6 @@ namespace OrderManagement.Core.Interfaces
         Task CreateProductAsync(Product product);
         Task UpdateProductAsync(Product product);
         Task DeleteProductAsync(int id);
+        Task<bool> AddStockAsync(int productId, int quantity);
     }
 }
